@@ -94,14 +94,20 @@
 
 
 
-  <meta name="keywords" content="iOS，软件开发">
-<meta property="og:type" content="website">
-<meta property="og:title" content="软件开发实践学习记录">
-<meta property="og:url" content="http://yoursite.com/index.html">
+  <meta name="description" content="概览iOS 启动，会先在内存空间中开辟一块区域，然后将这块区域内部划分成如下部分。  图中与我们相关性较大的是栈区和堆区。栈区一般是存放方法栈。堆区存放开发者创建的对象。通常我们说的内存管理，就是指的堆中的内存管理。 引用计数iOS中采用引用计数的方式管理内存，每多一个强引用，引用计数就加一，销毁一个强引用，引用计数就减一。引用计数为0时，会触发dealloc方法，释放该对象。下面将要介绍的东西都">
+<meta name="keywords" content="iOS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS内存介绍">
+<meta property="og:url" content="http://yoursite.com/2019/03/23/iOS内存介绍/index.html">
 <meta property="og:site_name" content="软件开发实践学习记录">
+<meta property="og:description" content="概览iOS 启动，会先在内存空间中开辟一块区域，然后将这块区域内部划分成如下部分。  图中与我们相关性较大的是栈区和堆区。栈区一般是存放方法栈。堆区存放开发者创建的对象。通常我们说的内存管理，就是指的堆中的内存管理。 引用计数iOS中采用引用计数的方式管理内存，每多一个强引用，引用计数就加一，销毁一个强引用，引用计数就减一。引用计数为0时，会触发dealloc方法，释放该对象。下面将要介绍的东西都">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/2019/03/23/iOS内存介绍/memory.png">
+<meta property="og:updated_time" content="2019-06-25T09:05:14.537Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="软件开发实践学习记录">
+<meta name="twitter:title" content="iOS内存介绍">
+<meta name="twitter:description" content="概览iOS 启动，会先在内存空间中开辟一块区域，然后将这块区域内部划分成如下部分。  图中与我们相关性较大的是栈区和堆区。栈区一般是存放方法栈。堆区存放开发者创建的对象。通常我们说的内存管理，就是指的堆中的内存管理。 引用计数iOS中采用引用计数的方式管理内存，每多一个强引用，引用计数就加一，销毁一个强引用，引用计数就减一。引用计数为0时，会触发dealloc方法，释放该对象。下面将要介绍的东西都">
+<meta name="twitter:image" content="http://yoursite.com/2019/03/23/iOS内存介绍/memory.png">
 
 
 
@@ -111,7 +117,7 @@
 
   
   
-  <link rel="canonical" href="http://yoursite.com/">
+  <link rel="canonical" href="http://yoursite.com/2019/03/23/iOS内存介绍/">
 
 
 
@@ -121,7 +127,7 @@
   };
 </script>
 
-  <title>软件开发实践学习记录</title>
+  <title>iOS内存介绍 | 软件开发实践学习记录</title>
   
 
 
@@ -169,8 +175,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -208,7 +213,7 @@
         
         
           
-          <li class="menu-item menu-item-home menu-item-active">
+          <li class="menu-item menu-item-home">
 
     
     
@@ -300,9 +305,9 @@
           
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -334,10 +339,8 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/03/23/iOS内存介绍/" class="post-title-link" itemprop="url">iOS内存介绍</a>
+          <h1 class="post-title" itemprop="name headline">iOS内存介绍
+
               
             
           </h1>
@@ -438,9 +441,7 @@
       
 
       
-        
-          
-            <h1 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h1><p>iOS 启动，会先在内存空间中开辟一块区域，然后将这块区域内部划分成如下部分。</p>
+        <h1 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h1><p>iOS 启动，会先在内存空间中开辟一块区域，然后将这块区域内部划分成如下部分。</p>
 <img src="/2019/03/23/iOS内存介绍/memory.png" title="This is an example image">
 <p>图中与我们相关性较大的是栈区和堆区。栈区一般是存放方法栈。堆区存放开发者创建的对象。通常我们说的内存管理，就是指的堆中的内存管理。</p>
 <h1 id="引用计数"><a href="#引用计数" class="headerlink" title="引用计数"></a>引用计数</h1><p>iOS中采用引用计数的方式管理内存，每多一个强引用，引用计数就加一，销毁一个强引用，引用计数就减一。引用计数为0时，会触发dealloc方法，释放该对象。下面将要介绍的东西都是在引用技术基础上做的内存管理。</p>
@@ -563,8 +564,6 @@
 <p>参考文档：</p>
 <p><a href="https://blog.sunnyxx.com/2014/10/15/behind-autorelease/" target="_blank" rel="noopener">黑幕背后的Autorelease</a></p>
 
-          
-        
       
     </div>
 
@@ -585,14 +584,23 @@
 
     <footer class="post-footer">
       
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag"># iOS</a>
+          
+        </div>
+      
+
+      
+      
+      
 
       
 
       
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -602,14 +610,15 @@
   </article>
 
 
-    
-  </section>
-
-  
+  </div>
 
 
           </div>
           
+
+  
+
+
 
         </div>
         
@@ -629,8 +638,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -721,6 +739,23 @@
         </div>
       </div>
 
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概览"><span class="nav-number">1.</span> <span class="nav-text">概览</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#引用计数"><span class="nav-number">2.</span> <span class="nav-text">引用计数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#内存相关结构与操作"><span class="nav-number">3.</span> <span class="nav-text">内存相关结构与操作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#相关数据结构"><span class="nav-number">3.1.</span> <span class="nav-text">相关数据结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#操作"><span class="nav-number">3.2.</span> <span class="nav-text">操作</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#autoreleasepool"><span class="nav-number">4.</span> <span class="nav-text">autoreleasepool</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#大体思路"><span class="nav-number">4.1.</span> <span class="nav-text">大体思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#autoreleasepool的实现"><span class="nav-number">4.2.</span> <span class="nav-text">autoreleasepool的实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#runtime对autorelease返回值的优化"><span class="nav-number">4.3.</span> <span class="nav-text">runtime对autorelease返回值的优化</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#一个对象的内存布局"><span class="nav-number">5.</span> <span class="nav-text">一个对象的内存布局</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#内存分配"><span class="nav-number">5.1.</span> <span class="nav-text">内存分配</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内存对齐"><span class="nav-number">5.2.</span> <span class="nav-text">内存对齐</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#应用"><span class="nav-number">6.</span> <span class="nav-text">应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#内存bug调试，zombie模式，address-sanitizer，instruments"><span class="nav-number">6.1.</span> <span class="nav-text">内存bug调试，zombie模式，address sanitizer，instruments</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
       
 
       
@@ -851,6 +886,10 @@
 
 
   
+  <script src="/js/scrollspy.js?v=7.1.2"></script>
+<script src="/js/post-details.js?v=7.1.2"></script>
+
+
 
   
 
@@ -866,6 +905,8 @@
 
   
 
+
+  
 
 
   
