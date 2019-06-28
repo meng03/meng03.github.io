@@ -94,14 +94,29 @@
 
 
 
-  <meta name="keywords" content="iOS，软件开发">
-<meta property="og:type" content="website">
-<meta property="og:title" content="软件开发实践学习记录">
-<meta property="og:url" content="http://yoursite.com/index.html">
+  <meta name="description" content="非对称加密算法 RSA（三位作者的名字首字母）区别于对称加密算法，非对称加密算法采用两种密钥，公钥和私钥，公钥加密，私钥解密，反之也可以。私钥保留，公钥可以公开发布。 这种算法非常可靠，密钥越长，它就越难破解。根据已经披露的文献，目前被破解的最长RSA密钥是768个二进制位。也就是说，长度超过768位的密钥，还无法破解（至少没人公开宣布）。因此可以认为，1024位的RSA密钥基本安全，2048位的">
+<meta name="keywords" content="iOS,加密">
+<meta property="og:type" content="article">
+<meta property="og:title" content="rsa加密">
+<meta property="og:url" content="http://yoursite.com/2019/06/26/rsa加密/index.html">
 <meta property="og:site_name" content="软件开发实践学习记录">
+<meta property="og:description" content="非对称加密算法 RSA（三位作者的名字首字母）区别于对称加密算法，非对称加密算法采用两种密钥，公钥和私钥，公钥加密，私钥解密，反之也可以。私钥保留，公钥可以公开发布。 这种算法非常可靠，密钥越长，它就越难破解。根据已经披露的文献，目前被破解的最长RSA密钥是768个二进制位。也就是说，长度超过768位的密钥，还无法破解（至少没人公开宣布）。因此可以认为，1024位的RSA密钥基本安全，2048位的">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/2019/06/26/rsa加密/der-tlv-basic.png">
+<meta property="og:image" content="http://yoursite.com/2019/06/26/rsa加密/rsa%E5%8A%A0%E5%AF%86/der-tlv-basic.png">
+<meta property="og:image" content="http://yoursite.com/2019/06/26/rsa加密/der-tlv-recursive.png">
+<meta property="og:image" content="http://yoursite.com/2019/06/26/rsa加密/rsa%E5%8A%A0%E5%AF%86/der-tlv-recursive.png">
+<meta property="og:image" content="http://yoursite.com/2019/06/26/rsa加密/der-tlv-tagbyte.png">
+<meta property="og:image" content="http://yoursite.com/2019/06/26/rsa加密/rsa%E5%8A%A0%E5%AF%86/der-tlv-tagbyte.png">
+<meta property="og:image" content="http://yoursite.com/2019/06/26/rsa加密/der-tlv-lengthbyte.png">
+<meta property="og:image" content="http://yoursite.com/2019/06/26/rsa加密/rsa%E5%8A%A0%E5%AF%86/der-tlv-lengthbyte.png">
+<meta property="og:image" content="http://yoursite.com/2019/06/26/rsa加密/der-tlv-integer.png">
+<meta property="og:image" content="http://yoursite.com/Users/mengbingchuan/workspace/blog/source/_posts/rsa%E5%8A%A0%E5%AF%86/der-tlv-integer.png">
+<meta property="og:updated_time" content="2019-06-28T14:36:01.197Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="软件开发实践学习记录">
+<meta name="twitter:title" content="rsa加密">
+<meta name="twitter:description" content="非对称加密算法 RSA（三位作者的名字首字母）区别于对称加密算法，非对称加密算法采用两种密钥，公钥和私钥，公钥加密，私钥解密，反之也可以。私钥保留，公钥可以公开发布。 这种算法非常可靠，密钥越长，它就越难破解。根据已经披露的文献，目前被破解的最长RSA密钥是768个二进制位。也就是说，长度超过768位的密钥，还无法破解（至少没人公开宣布）。因此可以认为，1024位的RSA密钥基本安全，2048位的">
+<meta name="twitter:image" content="http://yoursite.com/2019/06/26/rsa加密/der-tlv-basic.png">
 
 
 
@@ -111,7 +126,7 @@
 
   
   
-  <link rel="canonical" href="http://yoursite.com/">
+  <link rel="canonical" href="http://yoursite.com/2019/06/26/rsa加密/">
 
 
 
@@ -121,7 +136,7 @@
   };
 </script>
 
-  <title>软件开发实践学习记录</title>
+  <title>rsa加密 | 软件开发实践学习记录</title>
   
 
 
@@ -169,8 +184,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -208,7 +222,7 @@
         
         
           
-          <li class="menu-item menu-item-home menu-item-active">
+          <li class="menu-item menu-item-home">
 
     
     
@@ -300,9 +314,9 @@
           
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -334,10 +348,8 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/06/26/rsa加密/" class="post-title-link" itemprop="url">rsa加密</a>
+          <h1 class="post-title" itemprop="name headline">rsa加密
+
               
             
           </h1>
@@ -413,9 +425,7 @@
       
 
       
-        
-          
-            <h2 id="非对称加密算法-RSA（三位作者的名字首字母）"><a href="#非对称加密算法-RSA（三位作者的名字首字母）" class="headerlink" title="非对称加密算法 RSA（三位作者的名字首字母）"></a>非对称加密算法 RSA（三位作者的名字首字母）</h2><p>区别于对称加密算法，非对称加密算法采用两种密钥，公钥和私钥，公钥加密，私钥解密，反之也可以。私钥保留，公钥可以公开发布。</p>
+        <h2 id="非对称加密算法-RSA（三位作者的名字首字母）"><a href="#非对称加密算法-RSA（三位作者的名字首字母）" class="headerlink" title="非对称加密算法 RSA（三位作者的名字首字母）"></a>非对称加密算法 RSA（三位作者的名字首字母）</h2><p>区别于对称加密算法，非对称加密算法采用两种密钥，公钥和私钥，公钥加密，私钥解密，反之也可以。私钥保留，公钥可以公开发布。</p>
 <p>这种算法非常可靠，密钥越长，它就越难破解。根据已经披露的文献，目前被破解的最长RSA密钥是768个二进制位。也就是说，长度超过768位的密钥，还无法破解（至少没人公开宣布）。因此可以认为，1024位的RSA密钥基本安全，2048位的密钥极其安全。</p>
 <p>RSA生成密钥的过程用到欧拉函数，模反元素等，十分复杂。</p>
 <ul>
@@ -518,8 +528,6 @@
 <p><a href="http://www.ruanyifeng.com/blog/2013/07/rsa_algorithm_part_two.html" target="_blank" rel="noopener">RSA 算法原理</a></p>
 <p><a href="https://serverfault.com/questions/9708/what-is-a-pem-file-and-how-does-it-differ-from-other-openssl-generated-key-file" target="_blank" rel="noopener">各类证书格式</a></p>
 
-          
-        
       
     </div>
 
@@ -540,315 +548,41 @@
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/23/iOS内存介绍/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="冰川">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="软件开发实践学习记录">
-    </span>
-
-    
-      <header class="post-header">
-
         
+          
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/03/23/iOS内存介绍/" class="post-title-link" itemprop="url">iOS内存介绍</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2019-03-23 13:00:23" itemprop="dateCreated datePublished" datetime="2019-03-23T13:00:23+08:00">2019-03-23</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2019-06-25 17:05:14" itemprop="dateModified" datetime="2019-06-25T17:05:14+08:00">2019-06-25</time>
-              
-            
-          </span>
-
+        <div class="post-tags">
           
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/" itemprop="url" rel="index"><span itemprop="name">iOS</span></a></span>
-
-                
-                
-                  , 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/iOS/内存/" itemprop="url" rel="index"><span itemprop="name">内存</span></a></span>
-
-                
-                
-              
-            </span>
+            <a href="/tags/iOS/" rel="tag"># iOS</a>
           
-
+            <a href="/tags/加密/" rel="tag"># 加密</a>
           
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h1><p>iOS 启动，会先在内存空间中开辟一块区域，然后将这块区域内部划分成如下部分。</p>
-<img src="/2019/03/23/iOS内存介绍/memory.png" title="This is an example image">
-<p>图中与我们相关性较大的是栈区和堆区。栈区一般是存放方法栈。堆区存放开发者创建的对象。通常我们说的内存管理，就是指的堆中的内存管理。</p>
-<h1 id="引用计数"><a href="#引用计数" class="headerlink" title="引用计数"></a>引用计数</h1><p>iOS中采用引用计数的方式管理内存，每多一个强引用，引用计数就加一，销毁一个强引用，引用计数就减一。引用计数为0时，会触发dealloc方法，释放该对象。下面将要介绍的东西都是在引用技术基础上做的内存管理。</p>
-<h1 id="内存相关结构与操作"><a href="#内存相关结构与操作" class="headerlink" title="内存相关结构与操作"></a>内存相关结构与操作</h1><h2 id="相关数据结构"><a href="#相关数据结构" class="headerlink" title="相关数据结构"></a>相关数据结构</h2><p>引用计数涉及到的数据结构有isa指针，sidetables，sidetable，weaktable等。</p>
-<p>isa指针中有几位是用来存储该对象被引用的次数的。但是因为位数有限，能表达的数量很有限，当不够表达时，isa中还有一位用来标记是否额外存储。如果标记是1，表示该对象的引用计数还存储在sidetables中。</p>
-<p>sidetables由64个sidetable组成。通过hash算法定位。因为这些表是全局共享，会频繁的并发读写，如果只有一个表，多个线程同时操作时，要等很久。分表后可以大大减少多个线程同时操作一个表的情况，提高性能。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">SideTable</span> &#123;</span></span><br><span class="line">    <span class="comment">// 保证原子操作的自旋锁</span></span><br><span class="line">    <span class="keyword">spinlock_t</span> slock;</span><br><span class="line">    <span class="comment">// 引用计数的 hash 表</span></span><br><span class="line">    RefcountMap refcnts;</span><br><span class="line">    <span class="comment">// weak 引用全局 hash 表</span></span><br><span class="line">    <span class="keyword">weak_table_t</span> weak_table;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>引用计数表以对象指针为key，以引用计数+两个标记位 为value。因为后两个标记位所以，当引用计数需要加减的时候，是从第三位开始。</p>
-<p>weak表以对象指针为key，以引用地址的数组为key，没增加一个weak引用，就添加到这个数组中。</p>
-<p>retain，relase等相关的操作都是针对这些结构的添加修改删除。</p>
-<h2 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h2><p><strong>retainCount</strong></p>
-<p>retainCount比较简单，根据对象地址找到sidetable，然后继续在RefCountmap中找到计数并返回</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">uintptr_t</span></span><br><span class="line">objc_object::sidetable_retainCount()</span><br><span class="line">&#123;</span><br><span class="line">    SideTable&amp; table = SideTables()[<span class="keyword">this</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">size_t</span> refcnt_result = <span class="number">1</span>;</span><br><span class="line">    </span><br><span class="line">    table.lock();</span><br><span class="line">    RefcountMap::iterator it = table.refcnts.find(<span class="keyword">this</span>);</span><br><span class="line">    <span class="keyword">if</span> (it != table.refcnts.end()) &#123;</span><br><span class="line">        <span class="comment">// this is valid for SIDE_TABLE_RC_PINNED too</span></span><br><span class="line">        refcnt_result += it-&gt;second &gt;&gt; SIDE_TABLE_RC_SHIFT;</span><br><span class="line">    &#125;</span><br><span class="line">    table.unlock();</span><br><span class="line">    <span class="keyword">return</span> refcnt_result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>retain</strong><br>retain操作会对引用计数加1</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">id</span><br><span class="line">objc_object::sidetable_retain()</span><br><span class="line">&#123;</span><br><span class="line">#if SUPPORT_NONPOINTER_ISA</span><br><span class="line">assert(!isa.nonpointer);</span><br><span class="line">#endif</span><br><span class="line">SideTable&amp; table = SideTables()[this];</span><br><span class="line"></span><br><span class="line">table.lock();</span><br><span class="line">size_t&amp; refcntStorage = table.refcnts[this];</span><br><span class="line">if (! (refcntStorage &amp; SIDE_TABLE_RC_PINNED)) &#123;</span><br><span class="line">refcntStorage += SIDE_TABLE_RC_ONE;</span><br><span class="line">&#125;</span><br><span class="line">table.unlock();</span><br><span class="line"></span><br><span class="line">return (id)this;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>release 自动引用减一，减到0，会调用SEL_dealloc，触发dealloc。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">uintptr_t</span><br><span class="line">objc_object::sidetable_release(bool performDealloc)</span><br><span class="line">&#123;</span><br><span class="line">#if SUPPORT_NONPOINTER_ISA</span><br><span class="line">assert(!isa.nonpointer);</span><br><span class="line">#endif</span><br><span class="line">SideTable&amp; table = SideTables()[this];</span><br><span class="line"></span><br><span class="line">bool do_dealloc = false;</span><br><span class="line"></span><br><span class="line">table.lock();</span><br><span class="line">RefcountMap::iterator it = table.refcnts.find(this);</span><br><span class="line">if (it == table.refcnts.end()) &#123;</span><br><span class="line">do_dealloc = true;</span><br><span class="line">table.refcnts[this] = SIDE_TABLE_DEALLOCATING;</span><br><span class="line">&#125; else if (it-&gt;second &lt; SIDE_TABLE_DEALLOCATING) &#123;</span><br><span class="line">// SIDE_TABLE_WEAKLY_REFERENCED may be set. Don&apos;t change it.</span><br><span class="line">do_dealloc = true;</span><br><span class="line">it-&gt;second |= SIDE_TABLE_DEALLOCATING;</span><br><span class="line">&#125; else if (! (it-&gt;second &amp; SIDE_TABLE_RC_PINNED)) &#123;</span><br><span class="line">it-&gt;second -= SIDE_TABLE_RC_ONE;</span><br><span class="line">&#125;</span><br><span class="line">table.unlock();</span><br><span class="line">if (do_dealloc  &amp;&amp;  performDealloc) &#123;</span><br><span class="line">((void(*)(objc_object *, SEL))objc_msgSend)(this, SEL_dealloc);</span><br><span class="line">&#125;</span><br><span class="line">return do_dealloc;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>dealloc 注释有说明，如果没有额外处理，就直接free，不然先通过object_dispose处理若引用，关联属性等</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">inline void</span><br><span class="line">objc_object::rootDealloc()</span><br><span class="line">&#123;</span><br><span class="line">assert(!UseGC);</span><br><span class="line">if (isTaggedPointer()) return;</span><br><span class="line"></span><br><span class="line">//指针型isa &amp;&amp; 没被弱引用&amp;&amp;没有关联属性&amp;&amp;没有c++创建&amp;&amp;没有用引用计数表</span><br><span class="line">if (isa.indexed  &amp;&amp;  </span><br><span class="line">!isa.weakly_referenced  &amp;&amp;  </span><br><span class="line">!isa.has_assoc  &amp;&amp;  </span><br><span class="line">!isa.has_cxx_dtor  &amp;&amp;  </span><br><span class="line">!isa.has_sidetable_rc)</span><br><span class="line">&#123;</span><br><span class="line">assert(!sidetable_present());</span><br><span class="line">//直接释放</span><br><span class="line">free(this);</span><br><span class="line">&#125; </span><br><span class="line">else &#123;</span><br><span class="line">object_dispose((id)this);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>dispose会调用destructInstance，这个方法如下，注释有说明</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">void *objc_destructInstance(id obj) </span><br><span class="line">&#123;</span><br><span class="line">if (obj) &#123;</span><br><span class="line">// Read all of the flags at once for performance.</span><br><span class="line">bool cxx = obj-&gt;hasCxxDtor();</span><br><span class="line">bool assoc = !UseGC &amp;&amp; obj-&gt;hasAssociatedObjects();</span><br><span class="line">bool dealloc = !UseGC;</span><br><span class="line"></span><br><span class="line">// This order is important.</span><br><span class="line">//调用c++的销毁方法</span><br><span class="line">if (cxx) object_cxxDestruct(obj);</span><br><span class="line">//移除关联属性</span><br><span class="line">if (assoc) _object_remove_assocations(obj);</span><br><span class="line">//清理引用计数表和weak表</span><br><span class="line">if (dealloc) obj-&gt;clearDeallocating();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">return obj;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>下面是clearDeallocating，主要是处理引用计数表和弱引用表</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">inline void </span><br><span class="line">objc_object::clearDeallocating()</span><br><span class="line">&#123;</span><br><span class="line">if (!isa.indexed) &#123;</span><br><span class="line">// Slow path for raw pointer isa.</span><br><span class="line">//清理引用计数表</span><br><span class="line">sidetable_clearDeallocating();</span><br><span class="line">&#125;</span><br><span class="line">else if (isa.weakly_referenced  ||  isa.has_sidetable_rc) &#123;</span><br><span class="line">// Slow path for non-pointer isa with weak refs and/or side table data.</span><br><span class="line">clearDeallocating_slow();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">assert(!sidetable_present());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="autoreleasepool"><a href="#autoreleasepool" class="headerlink" title="autoreleasepool"></a>autoreleasepool</h1><h2 id="大体思路"><a href="#大体思路" class="headerlink" title="大体思路"></a>大体思路</h2><p>autoreleasepool通过<code>AutoreleasePoolPage</code>管理对象，每个线程有一个page，存储在TLS中。page内部以栈的方式组织，大小位4096字节，对应操作系统的内存页。每次添加对象就通过page的压栈存入，存满会创建一个新的page继续存储，page与page通过链表的方式存储。push操作会将一个哨兵（nil）压栈，并返回这个位置的地址。pop会查找这个地址，将栈顶到该位置的对象都release。多次的autoreleasepool，会有多个push，记录多个哨兵的位置，然后pop时pop到对应的位置。</p>
-<h2 id="autoreleasepool的实现"><a href="#autoreleasepool的实现" class="headerlink" title="autoreleasepool的实现"></a>autoreleasepool的实现</h2><p>我们通常使用自动释放池就是使用<code>@autoreleasepool{}</code>，这个block对应一个结构体</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">struct __AtAutoreleasePool &#123;</span><br><span class="line">__AtAutoreleasePool() &#123;atautoreleasepoolobj = objc_autoreleasePoolPush();&#125;</span><br><span class="line">~__AtAutoreleasePool() &#123;objc_autoreleasePoolPop(atautoreleasepoolobj);&#125;</span><br><span class="line">void * atautoreleasepoolobj;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>这个结构题会在初始化的时候调用<code>objc_autoreleasePoolPush</code>，在析构时调用<code>objc_autoreleasePoolPop</code>。
-我们在objc源码中找到这两个方法。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">void *</span><br><span class="line">objc_autoreleasePoolPush(void)</span><br><span class="line">&#123;</span><br><span class="line">if (UseGC) return nil;</span><br><span class="line">return AutoreleasePoolPage::push();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void</span><br><span class="line">objc_autoreleasePoolPop(void *ctxt)</span><br><span class="line">&#123;</span><br><span class="line">if (UseGC) return;</span><br><span class="line">AutoreleasePoolPage::pop(ctxt);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这两个方法是<code>AutoreleasePoolPage</code>这个类来实现的。<br>直接从这两个方法看起</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">//添加哨兵POOL_SENTINEL（值为nil），处理page，返回哨兵对象的地址。</span><br><span class="line">static inline void *push() </span><br><span class="line">&#123;</span><br><span class="line">id *dest;</span><br><span class="line">if (DebugPoolAllocation) &#123;</span><br><span class="line">// Each autorelease pool starts on a new pool page.</span><br><span class="line">dest = autoreleaseNewPage(POOL_SENTINEL);</span><br><span class="line">&#125; else &#123;</span><br><span class="line">dest = autoreleaseFast(POOL_SENTINEL);</span><br><span class="line">&#125;</span><br><span class="line">assert(*dest == POOL_SENTINEL);</span><br><span class="line">return dest;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>下面看下怎么处理的poolpage</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">static inline id *autoreleaseFast(id obj)</span><br><span class="line">&#123;</span><br><span class="line">AutoreleasePoolPage *page = hotPage();</span><br><span class="line">if (page &amp;&amp; !page-&gt;full()) &#123;</span><br><span class="line">return page-&gt;add(obj);</span><br><span class="line">&#125; else if (page) &#123;</span><br><span class="line">return autoreleaseFullPage(obj, page);</span><br><span class="line">&#125; else &#123;</span><br><span class="line">return autoreleaseNoPage(obj);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>拿到当前page，如果能拿到并且，page没有存满，就将obj存入<br>如果page是满的，就走autoreleaseFullPage<br>如果没拿到page，走autoreleaseNoPage方法</p>
-<p>接着看下hotPage()是怎么处理的。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">static inline AutoreleasePoolPage *hotPage() </span><br><span class="line">&#123;</span><br><span class="line">AutoreleasePoolPage *result = (AutoreleasePoolPage *)</span><br><span class="line">tls_get_direct(key);</span><br><span class="line">if (result) result-&gt;fastcheck();</span><br><span class="line">return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这个page是放到线程的存储空间的，所以poolpage是线程相关的，一个线程，一个page链。</p>
-<p>没有page时，第一次创建成功会将hotpage存起来，会存到线程中。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">static inline void setHotPage(AutoreleasePoolPage *page) </span><br><span class="line">&#123;</span><br><span class="line">if (page) page-&gt;fastcheck();</span><br><span class="line">tls_set_direct(key, (void *)page);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>至此push就差不多了，总结下push都干了什么</p>
-<ul>
-<li>从线程的存储空间中拿到当前页（hotpage），没有的话，就创建一个放进去</li>
-<li>查看page有没有满，没满就将传入的哨兵存入。</li>
-<li>page满了，向链中寻找最后一个节点，创建一个新的page，parent设置为这个节点，将这个节点设置为hotpage。</li>
-</ul>
-<p>接下来看看pop</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">static inline void pop(void *token) </span><br><span class="line">&#123;</span><br><span class="line">AutoreleasePoolPage *page;</span><br><span class="line">id *stop;</span><br><span class="line">//token是一个地址，要pop到这个地址为止。</span><br><span class="line">//找到这个地址所在的page</span><br><span class="line">page = pageForPointer(token);</span><br><span class="line">stop = (id *)token;</span><br><span class="line">//释放对象到指定的地址</span><br><span class="line">page-&gt;releaseUntil(stop);</span><br><span class="line">//移除空的page</span><br><span class="line">// memory: delete empty children</span><br><span class="line">if (DebugPoolAllocation  &amp;&amp;  page-&gt;empty()) &#123;</span><br><span class="line">// special case: delete everything during page-per-pool debugging</span><br><span class="line">AutoreleasePoolPage *parent = page-&gt;parent;</span><br><span class="line">page-&gt;kill();</span><br><span class="line">//重置hotpage</span><br><span class="line">setHotPage(parent);</span><br><span class="line">&#125; else if (DebugMissingPools  &amp;&amp;  page-&gt;empty()  &amp;&amp;  !page-&gt;parent) &#123;</span><br><span class="line">// special case: delete everything for pop(top) </span><br><span class="line">// when debugging missing autorelease pools</span><br><span class="line">//删光了，就没了</span><br><span class="line">page-&gt;kill();</span><br><span class="line">setHotPage(nil);</span><br><span class="line">&#125; </span><br><span class="line">else if (page-&gt;child) &#123;</span><br><span class="line">//如果当前page已经用了超过一半了，就保留一个空的page</span><br><span class="line">// hysteresis: keep one empty child if page is more than half full</span><br><span class="line">if (page-&gt;lessThanHalfFull()) &#123;</span><br><span class="line">page-&gt;child-&gt;kill();</span><br><span class="line">&#125;</span><br><span class="line">else if (page-&gt;child-&gt;child) &#123;</span><br><span class="line">page-&gt;child-&gt;child-&gt;kill();</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>pop操作和push是成对操作，push操作记录的位置，接下来会用来pop。</p>
-<h2 id="runtime对autorelease返回值的优化"><a href="#runtime对autorelease返回值的优化" class="headerlink" title="runtime对autorelease返回值的优化"></a>runtime对autorelease返回值的优化</h2><p><strong>问题1:为什么要做这个优化？</strong></p>
-<p>答：<br>当返回值被返回之后，紧接着就需要被 retain 的时候，没有必要进行 autorelease + retain，直接什么都不要做就好了。</p>
-<p><strong>问题2:如何做的优化？</strong></p>
-<p>基本思路：</p>
-<p>在返回值身上调用<code>objc_autoreleaseReturnValue</code>方法时，runtime在TLS中做一个标记，然后直接返回这个object（不调用autorelease）；同时，在外部接收这个返回值的objc_retainAutoreleasedReturnValue里，发现TLS中有标记，那么直接返回这个object（不调用retain）。<br>于是乎，调用方和被调方利用TLS做中转，很有默契的免去了对返回值的内存管理。</p>
-<p>具体做法：<br>优化主要是通过两个方法进行实现<code>objc_autoreleaseReturnValue</code>和<code>objc_retainAutoreleasedReturnValue</code></p>
-<p>看第一个方法前，先看个枚举</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">enum ReturnDisposition : bool &#123;</span><br><span class="line">ReturnAtPlus0 = false, ReturnAtPlus1 = true</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p><strong><code>objc_autoreleaseReturnValue</code></strong></p>
-<p>方法的实现如下，通过注释进行了解释</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// Prepare a value at +1 for return through a +0 autoreleasing convention.</span><br><span class="line">id objc_autoreleaseReturnValue(id obj)</span><br><span class="line">&#123;</span><br><span class="line">//可被优化的场景下，直接返回obj</span><br><span class="line">if (prepareOptimizedReturn(ReturnAtPlus1)) return obj;</span><br><span class="line">//否则还是使用autorelease</span><br><span class="line">return objc_autorelease(obj);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>对可优化场景的判断，在<code>prepareOptimizedReturn</code>方法中，参数我们根据上边的枚举已经得知<br><code>ReturnAtPlus1</code>是<code>true</code>,看下这个方法的实现，用注释做了说明。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">static ALWAYS_INLINE bool </span><br><span class="line">prepareOptimizedReturn(ReturnDisposition disposition)</span><br><span class="line">&#123;</span><br><span class="line">//如果调用方符合优化条件，就返回true，表示这次调用可以被优化</span><br><span class="line">if (callerAcceptsOptimizedReturn(__builtin_return_address(0))) &#123;</span><br><span class="line">//设置dispostion，为后续的objc_retainAutoreleasedReturnValue准备</span><br><span class="line">if (disposition) setReturnDisposition(disposition);</span><br><span class="line">return true;</span><br><span class="line">&#125;</span><br><span class="line">//不符合条件，不做优化</span><br><span class="line">return false;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>setReturnDisposition</code>是在TLS中存入标记，后续的<code>objc_retainAutoreleasedReturnValue</code>会从TLS中读取来判断，之前是否已经做过了优化。这里比较复杂的方法是<code>callerAcceptsOptimizedReturn</code>判断调用方是否接受一个优化的结果。方法的实现比较难以理解，但是注释说明的比较清楚。</p>
-<blockquote>
-<p>Callee looks for <code>mov rax, rdi</code> followed by a call or<br>jump instruction to objc_retainAutoreleasedReturnValue or<br>objc_unsafeClaimAutoreleasedReturnValue. </p>
-</blockquote>
-<p>接收方为上述的两种情况时，调用方就符合优化条件。这个条件其实是判断，是否MRC和ARC混编，如果调用方和被调方一个使用MRC一个使用ARC，就不能做这个优化了。</p>
-<p><strong><code>objc_retainAutoreleasedReturnValue</code></strong></p>
-<p>这个方法相对简单，就是判断之前是否已经做了优化（通过TLS中的<code>RETURN_DISPOSITION_KEY</code>）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// Accept a value returned through a +0 autoreleasing convention for use at +1.</span><br><span class="line">id objc_retainAutoreleasedReturnValue(id obj)</span><br><span class="line">&#123;   //从TLS中获取RETURN_DISPOSITION_KEY对应的值，为true，就直接返回obj。</span><br><span class="line">//读取完之后，重置为false</span><br><span class="line">if (acceptOptimizedReturn() == ReturnAtPlus1) return obj;</span><br><span class="line">//没有优化，就走正常的retain流程</span><br><span class="line">return objc_retain(obj);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这两个方法成对使用，就可以省去将对象添加到autoreleasepool中的操作。</p>
-<h1 id="一个对象的内存布局"><a href="#一个对象的内存布局" class="headerlink" title="一个对象的内存布局"></a>一个对象的内存布局</h1><h2 id="内存分配"><a href="#内存分配" class="headerlink" title="内存分配"></a>内存分配</h2><p><code>alloc</code> <code>init</code>分别做了些什么事？</p>
-<p>一个类的alloc方法，会向堆申请一块区域，用来存储对象中的变量。接下来看看对象中的变量组成。</p>
-<p>OC类会被转成struct来表示，一个NSObject转成struct是下面这个样子</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">struct NSObject_IMPL &#123;</span><br><span class="line">Class isa;</span><br><span class="line">&#125;;</span><br><span class="line">typedef struct objc_class *Class;</span><br></pre></td></tr></table></figure>
-
-<p>Class是一个别名，它其实是 object_class指针。</p>
-<p>一个自定义类的表示如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">@interface Student : NSObject&#123;</span><br><span class="line"></span><br><span class="line">@public</span><br><span class="line">int _no;</span><br><span class="line">int _age;</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">struct Student_IMPL &#123;</span><br><span class="line">struct NSObject_IMPL NSObject_IVARS;</span><br><span class="line">int _no;</span><br><span class="line">int _age;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>所以子类的实例变量中的第一个是父类struct表示。那么一个类分配的内存，是父类变量的内存，加上本类变量需要的内存。最顶部的NSObject中只有一个isa指针，而指针的大小与操作系统的位数有关，64位，指针也是64位，8个字节。32位，指针也是32位，4个字节。以64位系统为例，NSObject的对象会占用8个字节。Student会占用16个字节。</p>
-<h2 id="内存对齐"><a href="#内存对齐" class="headerlink" title="内存对齐"></a>内存对齐</h2><p>一个对象占用的内存，并不是所有变量相加出来的结果。中间会有一些空位补0，来对齐。目的是为了提高内存的访问效率以及平台移植。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">struct StructOne &#123;</span><br><span class="line">char a;         //1字节</span><br><span class="line">double b;       //8字节</span><br><span class="line">int c;          //4字节</span><br><span class="line">short d;        //2字节</span><br><span class="line">&#125; MyStruct1;</span><br><span class="line"></span><br><span class="line">struct StructTwo &#123;</span><br><span class="line">double b;       //8字节</span><br><span class="line">char a;         //1字节</span><br><span class="line">short d;        //2字节</span><br><span class="line">int c;         //4字节</span><br><span class="line">&#125; MyStruct2;</span><br><span class="line">NSLog(@&quot;%lu---%lu--&quot;, sizeof(MyStruct1), sizeof(MyStruct2));</span><br><span class="line">//24,16</span><br></pre></td></tr></table></figure>
-
-<p>两个结构体中的组成一样，内存占用却不一样。先看下原则</p>
-<p>内存对齐原则：</p>
-<ul>
-<li>对于结构体的各个成员，第一个成员的偏移量是0，排列在后面的成员其当前偏移量必须是当前成员类型的整数倍</li>
-<li>结构体内所有数据成员各自内存对齐后，结构体本身还要进行一次内存对齐，保证整个结构体占用内存大小是结构体内最大数据成员的最小整数倍</li>
-<li>如程序中有#pragma pack(n)预编译指令，则所有成员对齐以n字节为准(即偏移量是n的整数倍)，不再考虑当前类型以及最大结构体内类型</li>
-</ul>
-<p>在不设置pragma pack的情况下，我们用前两条原则，对上面两个结构体进行分析。<br>StructOne</p>
-<ul>
-<li>a字段从0起，占一个字节，offset1</li>
-<li>b字段不能从2起，按照原则1，要从8开始，占8个字节，offset 16</li>
-<li>c字段从16起，没有问题，占4个字节，offset 20</li>
-<li>d字段从20起，没有问题，占2个字节，offset 22</li>
-<li>根据原则2，structOne的占位应该是double类型的整数倍，22最近的8的倍数，即24。</li>
-</ul>
-<p>-&gt;操作<br>地址操作，通过</p>
-<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="内存bug调试，zombie模式，address-sanitizer，instruments"><a href="#内存bug调试，zombie模式，address-sanitizer，instruments" class="headerlink" title="内存bug调试，zombie模式，address sanitizer，instruments"></a>内存bug调试，zombie模式，address sanitizer，instruments</h2><p>待了解：<br><a href="https://developer.apple.com/videos/play/wwdc2018/416/" target="_blank" rel="noopener">iOS Memory Deep Dive</a></p>
-<p>补充：<br>NSNumber，NSDate 使用taggedPointer技术，将指针与值保存在一起。看似对象，其实是基础类型。存在栈中，不会放到堆上。</p>
-<p>参考文档：</p>
-<p><a href="https://blog.sunnyxx.com/2014/10/15/behind-autorelease/" target="_blank" rel="noopener">黑幕背后的Autorelease</a></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
       
 
       
       
-        <div class="post-eof"></div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/23/iOS内存介绍/" rel="next" title="iOS内存介绍">
+                <i class="fa fa-chevron-left"></i> iOS内存介绍
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
       
     </footer>
   </div>
@@ -858,14 +592,15 @@
   </article>
 
 
-    
-  </section>
-
-  
+  </div>
 
 
           </div>
           
+
+  
+
+
 
         </div>
         
@@ -885,8 +620,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -977,6 +721,23 @@
         </div>
       </div>
 
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#非对称加密算法-RSA（三位作者的名字首字母）"><span class="nav-number">1.</span> <span class="nav-text">非对称加密算法 RSA（三位作者的名字首字母）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#密钥的形式"><span class="nav-number">2.</span> <span class="nav-text">密钥的形式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ASN-1"><span class="nav-number">2.1.</span> <span class="nav-text">ASN.1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DER-编码介绍"><span class="nav-number">2.2.</span> <span class="nav-text">DER 编码介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#tag编码"><span class="nav-number">2.2.1.</span> <span class="nav-text">tag编码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#长度的约定"><span class="nav-number">2.2.2.</span> <span class="nav-text">长度的约定</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#值的约定"><span class="nav-number">2.2.3.</span> <span class="nav-text">值的约定</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#INTEGER"><span class="nav-number">2.2.3.1.</span> <span class="nav-text">INTEGER</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#SEQUENCE"><span class="nav-number">2.2.3.2.</span> <span class="nav-text">SEQUENCE</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#密钥的表现形式"><span class="nav-number">2.2.4.</span> <span class="nav-text">密钥的表现形式</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#openssl生成的私钥"><span class="nav-number">2.2.4.1.</span> <span class="nav-text">openssl生成的私钥</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#服务端给的公钥，待补充：这个公钥的类型是什么？"><span class="nav-number">2.2.4.2.</span> <span class="nav-text">服务端给的公钥，待补充：这个公钥的类型是什么？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#sshkeygen生成的公钥"><span class="nav-number">2.2.4.3.</span> <span class="nav-text">sshkeygen生成的公钥</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#待补充"><span class="nav-number">2.2.5.</span> <span class="nav-text">待补充</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
       
 
       
@@ -1107,6 +868,10 @@
 
 
   
+  <script src="/js/scrollspy.js?v=7.1.2"></script>
+<script src="/js/post-details.js?v=7.1.2"></script>
+
+
 
   
 
@@ -1122,6 +887,8 @@
 
   
 
+
+  
 
 
   
