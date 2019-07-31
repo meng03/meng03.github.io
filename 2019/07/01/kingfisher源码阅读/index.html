@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="软件开发实践学习记录">
 <meta property="og:description" content="模块介绍通用模块ImageSourceKingfisher中对图片资源的表示有两种，定义在Source枚举中。 1234public enum Source &amp;#123;  case network(Resource)  case provider(ImageDataProvider)&amp;#125;  network类型的需要提供一个url和cacheKey，然后kingfisher会自行下载。pr">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-07-17T08:56:02.430Z">
+<meta property="og:updated_time" content="2019-07-30T11:48:19.506Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="kingfisher源码阅读">
 <meta name="twitter:description" content="模块介绍通用模块ImageSourceKingfisher中对图片资源的表示有两种，定义在Source枚举中。 1234public enum Source &amp;#123;  case network(Resource)  case provider(ImageDataProvider)&amp;#125;  network类型的需要提供一个url和cacheKey，然后kingfisher会自行下载。pr">
@@ -380,7 +380,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-07-17 16:56:02" itemprop="dateModified" datetime="2019-07-17T16:56:02+08:00">2019-07-17</time>
+                <time title="Modified: 2019-07-30 19:48:19" itemprop="dateModified" datetime="2019-07-30T19:48:19+08:00">2019-07-30</time>
               
             
           </span>
@@ -529,20 +529,8 @@
 <p>请求的起点一般是从<code>UIImageView.setImage</code>开始的，这个方法的调用一般是在主线程中发起。这个方法拿到数据后，<code>completionHandler</code>是通过<code>CallbackQueue.mainCurrentOrAsync</code>在主线程中执行。</p>
 <p>在获取数据，会先查内存缓存，在查磁盘缓存。内存缓存的查询比较快，会在当前线程知节执行。磁盘缓存的查询，会使用一个单独的串行队列完成。</p>
 <h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><h4 id="Delegate-lt-Input-Output-gt"><a href="#Delegate-lt-Input-Output-gt" class="headerlink" title="Delegate&lt;Input, Output&gt;"></a>Delegate&lt;Input, Output&gt;</h4><p>Kingfisher 中使用Delegate类来包装block，添加<code>[weak self]</code>来避免 retain cycle。</p>
-<p>class Delegate&lt;Input, Output&gt; {</p>
-<p>​    init() {}    </p>
-<p>​    private var block: ((Input) -&gt; Output?)?    </p>
-<p>​    func delegate&lt;T: AnyObject&gt;(on target: T, block: ((T, Input) -&gt; Output)?) {</p>
-<p>​        // The <code>target</code> is weak inside block, so you do not need to worry about it in the caller side.</p>
-<p>​        self.block = { [weak target] input in</p>
-<p>​            guard let target = target else { return nil }</p>
-<p>​            return block?(target, input)</p>
-<p>​        }</p>
-<p>​    }</p>
-<p>​    func call(_ input: Input) -&gt; Output? {</p>
-<p>​        return block?(input)</p>
-<p>​    }</p>
-<p>}</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Delegate</span>&lt;<span class="title">Input</span>, <span class="title">Output</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">init</span>() &#123;&#125;    </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> block: ((<span class="type">Input</span>) -&gt; <span class="type">Output?</span>)?    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">delegate</span>&lt;T: AnyObject&gt;<span class="params">(on target: T, block: <span class="params">(<span class="params">(T, Input)</span></span></span></span> -&gt; <span class="type">Output</span>)?) &#123;</span><br><span class="line">        <span class="keyword">self</span>.block = &#123; [<span class="keyword">weak</span> target] input <span class="keyword">in</span></span><br><span class="line">            <span class="keyword">guard</span> <span class="keyword">let</span> target = target <span class="keyword">else</span> &#123; <span class="keyword">return</span> <span class="literal">nil</span> &#125;</span><br><span class="line">            <span class="keyword">return</span> block?(target, input)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;    </span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">call</span><span class="params">(<span class="number">_</span> input: Input)</span></span> -&gt; <span class="type">Output?</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> block?(input)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>delegate方法，将传入的block包装成自己的block，中间加入weak处理。call方法则是调用这个block。</p>
 <h4 id="defer的使用"><a href="#defer的使用" class="headerlink" title="defer的使用"></a>defer的使用</h4><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">addCallback</span><span class="params">(<span class="number">_</span> callback: TaskCallback)</span></span> -&gt; <span class="type">CancelToken</span> &#123;</span><br><span class="line">    lock.lock()</span><br><span class="line">    <span class="keyword">defer</span> &#123; lock.unlock() &#125;</span><br><span class="line">    callbacksStore[currentToken] = callback</span><br><span class="line">    <span class="keyword">defer</span> &#123; currentToken += <span class="number">1</span> &#125;</span><br><span class="line">    <span class="keyword">return</span> currentToken</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -616,8 +604,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/07/26/MMKV/" rel="prev" title="MMKV">
-                MMKV <i class="fa fa-chevron-right"></i>
+              <a href="/2019/07/18/PLeakSniffer源码阅读/" rel="prev" title="PLeakSniffer 源码阅读">
+                PLeakSniffer 源码阅读 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -687,7 +675,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-count">5</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -735,7 +723,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">5</span>
+                      
+                    
+                    <span class="site-state-item-count">6</span>
                     <span class="site-state-item-name">tags</span>
                   </a>
                 </div>

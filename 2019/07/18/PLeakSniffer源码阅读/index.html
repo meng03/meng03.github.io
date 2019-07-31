@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.2">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.1.2">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.1.2">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.1.2">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.2" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="介绍关于PLeakSniffer的介绍可以直接看作者的文章。下面是原文中的介绍。  子对象（比如view）建立一个对controller的weak引用，如果Controller被释放，这个weak引用也随之置为nil。那怎么知道子对象没有被释放呢？用一个单例对象每个一小段时间发出一个ping通知去ping这个子对象，如果子对象还活着就回一个pong通知。所以结论就是：如果子对象的controlle">
+<meta name="keywords" content="iOS,源码,内存">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PLeakSniffer 源码阅读">
+<meta property="og:url" content="http://yoursite.com/2019/07/18/PLeakSniffer源码阅读/index.html">
+<meta property="og:site_name" content="软件开发实践学习记录">
+<meta property="og:description" content="介绍关于PLeakSniffer的介绍可以直接看作者的文章。下面是原文中的介绍。  子对象（比如view）建立一个对controller的weak引用，如果Controller被释放，这个weak引用也随之置为nil。那怎么知道子对象没有被释放呢？用一个单例对象每个一小段时间发出一个ping通知去ping这个子对象，如果子对象还活着就回一个pong通知。所以结论就是：如果子对象的controlle">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-07-31T12:07:42.391Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PLeakSniffer 源码阅读">
+<meta name="twitter:description" content="介绍关于PLeakSniffer的介绍可以直接看作者的文章。下面是原文中的介绍。  子对象（比如view）建立一个对controller的weak引用，如果Controller被释放，这个weak引用也随之置为nil。那怎么知道子对象没有被释放呢？用一个单例对象每个一小段时间发出一个ping通知去ping这个子对象，如果子对象还活着就回一个pong通知。所以结论就是：如果子对象的controlle">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="软件开发实践学习记录" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2019/07/18/PLeakSniffer源码阅读/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>PLeakSniffer 源码阅读 | 软件开发实践学习记录</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">软件开发实践学习记录</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/18/PLeakSniffer源码阅读/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="冰川">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="软件开发实践学习记录">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">PLeakSniffer 源码阅读
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-07-18 15:48:54" itemprop="dateCreated datePublished" datetime="2019-07-18T15:48:54+08:00">2019-07-18</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-07-31 20:07:42" itemprop="dateModified" datetime="2019-07-31T20:07:42+08:00">2019-07-31</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>关于PLeakSniffer的介绍可以直接看作者的<a href="http://mrpeak.cn/blog/leak/" target="_blank" rel="noopener">文章</a>。下面是原文中的介绍。</p>
+<blockquote>
+<p>子对象（比如view）建立一个对controller的weak引用，如果Controller被释放，这个weak引用也随之置为nil。那怎么知道子对象没有被释放呢？用一个单例对象每个一小段时间发出一个ping通知去ping这个子对象，如果子对象还活着就回一个pong通知。所以结论就是：如果子对象的controller已不存在，但还能响应这个ping通知，那么这个对象就是可疑的泄漏对象。</p>
+</blockquote>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>介绍比较简单，作者给出的用法如下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#if MY_DEBUG_ENV</span><br><span class="line">[[PLeakSniffer sharedInstance] installLeakSniffer];</span><br><span class="line">[[PLeakSniffer sharedInstance] addIgnoreList:@[@&quot;MySingletonController&quot;]];</span><br><span class="line">#endif</span><br></pre></td></tr></table></figure>
+
+<h3 id="PLeakSnifferCitizen"><a href="#PLeakSnifferCitizen" class="headerlink" title="PLeakSnifferCitizen"></a>PLeakSnifferCitizen</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@protocol PLeakSnifferCitizen &lt;NSObject&gt;</span><br><span class="line">+ (void)prepareForSniffer;</span><br><span class="line">- (BOOL)markAlive;</span><br><span class="line">- (BOOL)isAlive;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+
+<p>如果要对某个类型进行内存检查，这个对象要实现这个协议。下面看看库支持的三种类型的实现。</p>
+<h4 id="NSObject"><a href="#NSObject" class="headerlink" title="NSObject"></a>NSObject</h4><p><code>NSObject</code>的分类实现了<code>markAlive</code>方法。另外两个方法并没有实现。所以并不是所有继承自<code>NSObject</code>的类型都会被追踪。主要是这个方法逻辑覆盖了三种库里支持的类型，所以在这里写，省得每个类型都写一遍。下面看看这个方法的具体逻辑</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">- (BOOL)markAlive</span><br><span class="line">&#123;</span><br><span class="line">    if ([self pProxy] != nil) &#123;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    //不处理系统类型</span><br><span class="line">    NSString* className = NSStringFromClass([self class]);</span><br><span class="line">    if ([className hasPrefix:@&quot;_&quot;] || [className hasPrefix:@&quot;UI&quot;] || [className hasPrefix:@&quot;NS&quot;]) &#123;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    //如果view的superView是nil，则直接返回false</span><br><span class="line">    if ([self isKindOfClass:[UIView class]]) &#123;</span><br><span class="line">        UIView* v = (UIView*)self;</span><br><span class="line">        if (v.superview == nil) &#123;</span><br><span class="line">            return false;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    //controller需要在navigation栈中，或者是被present出来，否则返回false</span><br><span class="line">    if ([self isKindOfClass:[UIViewController class]]) &#123;</span><br><span class="line">        UIViewController* c = (UIViewController*)self;</span><br><span class="line">        if (c.navigationController == nil &amp;&amp; c.presentingViewController == nil) &#123;</span><br><span class="line">            return false;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    //skip some weird system classes</span><br><span class="line">    //跳过一些诡异的系统类（这个好像和上边的UI打头的类型判断重复了）</span><br><span class="line">    static NSMutableDictionary* ignoreList = nil;</span><br><span class="line">    @synchronized (self) &#123;</span><br><span class="line">        if (ignoreList == nil) &#123;</span><br><span class="line">            ignoreList = @&#123;&#125;.mutableCopy;</span><br><span class="line">            NSArray* arr = @[@&quot;UITextFieldLabel&quot;, @&quot;UIFieldEditor&quot;, @&quot;UITextSelectionView&quot;,</span><br><span class="line">                             @&quot;UITableViewCellSelectedBackground&quot;, @&quot;UIView&quot;, @&quot;UIAlertController&quot;];</span><br><span class="line">            for (NSString* str in arr) &#123;</span><br><span class="line">                ignoreList[str] = @&quot;:)&quot;;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        if ([ignoreList objectForKey:NSStringFromClass([self class])]) &#123;</span><br><span class="line">            return false;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    PObjectProxy* proxy = [PObjectProxy new];</span><br><span class="line">    //给当前对象设置一个代理对象，用于后续的ping操作</span><br><span class="line">    [self setPProxy:proxy];</span><br><span class="line">    [proxy prepareProxy:self];</span><br><span class="line">    </span><br><span class="line">    return true;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个方法有点长，因为要分类型处理。主要做两个事情（有点违背方法的单一职责）。</p>
+<ul>
+<li>如果不符合一些对象的alive定义，则直接返回false，告诉调用方，对象是非alive状态</li>
+<li>如果对象是alive状态，添加监测代理，用于后续ping对象。</li>
+</ul>
+<h4 id="UIViewController"><a href="#UIViewController" class="headerlink" title="UIViewController"></a>UIViewController</h4><p><code>UIViewController</code>的分类实现了<code>prepareForSniffer</code> 和<code>isAlive</code>。<code>markAlive</code>通过继承<code>NSObject</code>获得。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">+ (void)prepareForSniffer</span><br><span class="line">&#123;</span><br><span class="line">    static dispatch_once_t onceToken;</span><br><span class="line">    dispatch_once(&amp;onceToken, ^&#123;</span><br><span class="line">        [self swizzleSEL:@selector(presentViewController:animated:completion:) withSEL:@selector(swizzled_presentViewController:animated:completion:)];</span><br><span class="line">        [self swizzleSEL:@selector(viewDidAppear:) withSEL:@selector(swizzled_viewDidAppear:)];</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>prepareForSniffer</code>做了两个hook。</p>
+<ul>
+<li>hook controller的<code>present</code>方法，对<code>present</code>出来的controller，调用<code>markAlive</code>。</li>
+<li>Hook controller的<code>viewDidAppear</code>方法，对属性进行<code>track</code>。</li>
+</ul>
+<p>第二步，属性的track，其实就是递归调用属性的markAlive，添加proxy。</p>
+<p><code>isAlive</code>的判断逻辑</p>
+<ul>
+<li>所属view在UIWindow视图层级中</li>
+<li>本身在navigation栈中，或者是由其他controller present出来。</li>
+</ul>
+<p>主要代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">UIView* v = self.view;</span><br><span class="line">while (v.superview != nil) &#123;</span><br><span class="line">    v = v.superview;</span><br><span class="line">&#125;</span><br><span class="line">if ([v isKindOfClass:[UIWindow class]]) &#123;</span><br><span class="line">    visibleOnScreen = true;</span><br><span class="line">&#125;</span><br><span class="line">BOOL beingHeld = false;</span><br><span class="line">if (self.navigationController != nil || self.presentingViewController != nil) &#123;</span><br><span class="line">    beingHeld = true;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="UINavigationController"><a href="#UINavigationController" class="headerlink" title="UINavigationController"></a>UINavigationController</h4><p><code>UINavigationController</code>只实现了<code>prepareForSniffer</code>，<code>isAlive</code>继承自<code>UIViewController</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">+ (void)prepareForSniffer</span><br><span class="line">&#123;</span><br><span class="line">    static dispatch_once_t onceToken;</span><br><span class="line">    dispatch_once(&amp;onceToken, ^&#123;</span><br><span class="line">        [self swizzleSEL:@selector(pushViewController:animated:) withSEL:@selector(swizzled_pushViewController:animated:)];</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)swizzled_pushViewController:(UIViewController *)viewController animated:(BOOL)animated &#123;</span><br><span class="line">    </span><br><span class="line">    [self swizzled_pushViewController:viewController animated:animated];</span><br><span class="line">    </span><br><span class="line">    [viewController markAlive];</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Hook push方法，对push的controller，调用markAlive。</p>
+<h4 id="UIView"><a href="#UIView" class="headerlink" title="UIView"></a>UIView</h4><p><code>UIView</code>继承自<code>NSObject</code>，还需要实现<code>prepareForSniffer</code>和<code>isAlive</code>。跟前面几个的实现类似。hook一个合适的时机，调用markAlive。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">+ (void)prepareForSniffer</span><br><span class="line">&#123;</span><br><span class="line">    static dispatch_once_t onceToken;</span><br><span class="line">    dispatch_once(&amp;onceToken, ^&#123;</span><br><span class="line">        [self swizzleSEL:@selector(didMoveToSuperview) withSEL:@selector(swizzled_didMoveToSuperview)];</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)swizzled_didMoveToSuperview</span><br><span class="line">&#123;</span><br><span class="line">    [self swizzled_didMoveToSuperview];</span><br><span class="line">    </span><br><span class="line">    BOOL hasAliveParent = false;</span><br><span class="line">    </span><br><span class="line">    UIResponder* r = self.nextResponder;</span><br><span class="line">    while (r) &#123;</span><br><span class="line">        if ([r pProxy] != nil) &#123;</span><br><span class="line">            hasAliveParent = true;</span><br><span class="line">            break;</span><br><span class="line">        &#125;</span><br><span class="line">        r = r.nextResponder;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    if (hasAliveParent) &#123;</span><br><span class="line">        [self markAlive];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>isAlive</code>的判断跟之前controller中isAlive的判断前半部分是一样的，通过查看view的最顶层view是不是UIWindow来判断alive。</p>
+<h3 id="PObjectProxy"><a href="#PObjectProxy" class="headerlink" title="PObjectProxy"></a>PObjectProxy</h3><p>proxy主要做两件事</p>
+<ul>
+<li>注册通知接收ping的触发</li>
+<li>检查宿主是否在不应存活时，还活着，通知出去，此处可能有内存泄漏</li>
+</ul>
+<h4 id="注册通知"><a href="#注册通知" class="headerlink" title="注册通知"></a>注册通知</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">- (void)prepareProxy:(NSObject*)target &#123;</span><br><span class="line">    self.weakTarget = target;</span><br><span class="line">    [[NSNotificationCenter defaultCenter] removeObserver:self name:Notif_PLeakSniffer_Ping object:nil];</span><br><span class="line">    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(detectSnifferPing) name:Notif_PLeakSniffer_Ping object:nil];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="检查是否泄漏，可能泄漏就post出去"><a href="#检查是否泄漏，可能泄漏就post出去" class="headerlink" title="检查是否泄漏，可能泄漏就post出去"></a>检查是否泄漏，可能泄漏就post出去</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">- (void)detectSnifferPing</span><br><span class="line">&#123;</span><br><span class="line">    if (self.weakTarget == nil) &#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    if (_hasNotified) &#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    //如果proxy的target不应该alive。就记录一次fail</span><br><span class="line">    BOOL alive = [self.weakTarget isAlive];</span><br><span class="line">    if (alive == false) &#123;</span><br><span class="line">        _leakCheckFailCount ++;</span><br><span class="line">    &#125;</span><br><span class="line">    //fail次数到达5次以上就会进行提醒，5次大概是2.5秒</span><br><span class="line">    if (_leakCheckFailCount &gt;= kPObjectProxyLeakCheckMaxFailCount) &#123;</span><br><span class="line">        [self notifyPossibleMemoryLeak];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)notifyPossibleMemoryLeak</span><br><span class="line">&#123;</span><br><span class="line">    if (_hasNotified) &#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    _hasNotified = true;</span><br><span class="line">    dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">        [[NSNotificationCenter defaultCenter] postNotificationName:Notif_PLeakSniffer_Pong object:self.weakTarget];</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h3><p>有了上边的基础设施，下面的流程就比较简单了。流程逻辑主要在<code>PLeakSniffer</code>中。使用了一个timer，两个通知。从使用介绍来看，<code>installLeakSniffer</code>是起点。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">- (void)installLeakSniffer &#123;</span><br><span class="line">    [UINavigationController prepareForSniffer];</span><br><span class="line">    [UIViewController prepareForSniffer];</span><br><span class="line">    [UIView prepareForSniffer];   </span><br><span class="line">    [self startPingTimer];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>三个类型的prepare，以及启动ping定时。三个prepare逻辑上边分析过了，<code>navigationController</code>和<code>UIView</code>只是在合适的时间<code>markAlive</code>。<code>UIViewControler</code>除了在present时对presentingController进行标记，还需要对自己的属性进行递归标记。prepare流程结束后，所有之后的controller和View都会纳入监控（通过设置proxy）。</p>
+<p><code>startPingTimer</code>会检查是否在主线程，如果不在主线程，dispatch到主线程。然后创建timer，每0.5秒调用一次<code>sendPing</code>。<code>sendPing</code>就是post一个通知。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">- (void)startPingTimer</span><br><span class="line">&#123;</span><br><span class="line">    //检查是否在主线程，非主线程，则dispatch到主线程</span><br><span class="line">    if ([NSThread isMainThread] == false) &#123;</span><br><span class="line">        dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">            [self startPingTimer];</span><br><span class="line">            return ;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    if (self.pingTimer) &#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    //开启定时，每0.5秒，调用一次sendPing</span><br><span class="line">    self.pingTimer = [NSTimer scheduledTimerWithTimeInterval:kPLeakSnifferPingInterval target:self selector:@selector(sendPing) userInfo:nil repeats:true];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)sendPing</span><br><span class="line">&#123;</span><br><span class="line">    //发通知</span><br><span class="line">    [[NSNotificationCenter defaultCenter] postNotificationName:Notif_PLeakSniffer_Ping object:nil];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>前面看过了proxy逻辑，这里sendPing的通知会到proxy中，proxy会检查是否有可能泄漏。如果有泄漏，会通过通知发出去。而接受的地方还是<code>PLeakSniffer</code>。接收之后的处理比较简单。如果是需要被忽略的就丢弃。否则alert出来，活着print。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">- (void)detectPong:(NSNotification*)notif</span><br><span class="line">&#123;</span><br><span class="line">    NSObject* leakedObject = notif.object;</span><br><span class="line">    NSString* leakedName = NSStringFromClass([leakedObject class]);</span><br><span class="line">    @synchronized (self) &#123;</span><br><span class="line">        if ([_ignoreList containsObject:leakedName]) &#123;</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    //we got a leak here</span><br><span class="line">    if (_useAlert) &#123;</span><br><span class="line">        NSString* msg = [NSString stringWithFormat:@&quot;Detect Possible Leak: %@&quot;, [leakedObject class]];</span><br><span class="line">        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@&quot;PLeakSniffer&quot; message:msg delegate:nil cancelButtonTitle:nil otherButtonTitles:@&quot;OK&quot;, nil];</span><br><span class="line">        [alertView show];</span><br><span class="line">    &#125;</span><br><span class="line">    else</span><br><span class="line">    &#123;</span><br><span class="line">        if ([leakedObject isKindOfClass:[UIViewController class]]) &#123;</span><br><span class="line">            PLeakLog(@&quot;\n\nDetect Possible Controller Leak: %@ \n\n&quot;, [leakedObject class]);</span><br><span class="line">        &#125;</span><br><span class="line">        else</span><br><span class="line">        &#123;</span><br><span class="line">            PLeakLog(@&quot;\n\nDetect Possible Leak: %@ \n\n&quot;, [leakedObject class]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag"># iOS</a>
+          
+            <a href="/tags/源码/" rel="tag"># 源码</a>
+          
+            <a href="/tags/内存/" rel="tag"># 内存</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/01/kingfisher源码阅读/" rel="next" title="kingfisher源码阅读">
+                <i class="fa fa-chevron-left"></i> kingfisher源码阅读
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/07/26/MMKV/" rel="prev" title="MMKV">
+                MMKV <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">冰川</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#介绍"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用"><span class="nav-number">2.</span> <span class="nav-text">使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#PLeakSnifferCitizen"><span class="nav-number">2.1.</span> <span class="nav-text">PLeakSnifferCitizen</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#NSObject"><span class="nav-number">2.1.1.</span> <span class="nav-text">NSObject</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#UIViewController"><span class="nav-number">2.1.2.</span> <span class="nav-text">UIViewController</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#UINavigationController"><span class="nav-number">2.1.3.</span> <span class="nav-text">UINavigationController</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#UIView"><span class="nav-number">2.1.4.</span> <span class="nav-text">UIView</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PObjectProxy"><span class="nav-number">2.2.</span> <span class="nav-text">PObjectProxy</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#注册通知"><span class="nav-number">2.2.1.</span> <span class="nav-text">注册通知</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#检查是否泄漏，可能泄漏就post出去"><span class="nav-number">2.2.2.</span> <span class="nav-text">检查是否泄漏，可能泄漏就post出去</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#流程"><span class="nav-number">2.3.</span> <span class="nav-text">流程</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">冰川</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.1.2</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.2"></script>
+
+  <script src="/js/motion.js?v=7.1.2"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.1.2"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.1.2"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.2"></script>
+<script src="/js/post-details.js?v=7.1.2"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.2"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
